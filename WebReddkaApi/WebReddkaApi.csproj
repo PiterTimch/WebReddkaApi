@@ -29,7 +29,6 @@
 
 	<ItemGroup>
 	  <Folder Include="Controler\" />
-	  <Folder Include="Models\Posts\" />
 	</ItemGroup>
 
 </Project>
