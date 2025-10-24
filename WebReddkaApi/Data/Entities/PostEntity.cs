@@ -13,7 +13,7 @@ public class PostEntity
     public string Title { get; set; } = string.Empty;
     [Column("body")]
     [StringLength(500)]
-    public string? Body { get; set; }
+    public string Body { get; set; } = string.Empty;
     [Column("image")]
     [StringLength(100)]
     public string? Image { get; set; }
