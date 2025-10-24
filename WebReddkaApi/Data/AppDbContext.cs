@@ -10,4 +10,5 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<TopicEntity> Topics { get; set; }
+    public DbSet<PostEntity> Posts { get; set; }
 }
