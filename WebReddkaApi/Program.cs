@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using WebAPIDB.Data.Entities.Identity;
 using WebReddkaApi.Data;
 using WebReddkaApi.Helpers;
 using WebReddkaApi.Interfaces;
@@ -15,6 +17,17 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.DictionaryKeyPolicy = new SnakeCaseNamingPolicy();
     });
 
+
+builder.Services.AddIdentity<UserEntity, RoleEntity>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+})
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddCors(options =>
 {
@@ -34,7 +47,6 @@ builder.Services.AddScoped<IMediaService, MediaService>();
 var app = builder.Build();
 
 app.UseCors();
-
 
 app.UseSwagger();
 app.UseSwaggerUI();

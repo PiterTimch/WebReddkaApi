@@ -21,4 +21,7 @@ public class PostCreateModel
 
     [FromForm(Name = "topic_id")]
     public long TopicId { get; set; }
+
+    [FromForm(Name = "user_id")]
+    public long UserId { get; set; }
 }

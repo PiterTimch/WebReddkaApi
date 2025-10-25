@@ -9,7 +9,8 @@ public class PostMapper : Profile
     public PostMapper()
     {
         CreateMap<PostEntity, PostItemModel>()
-            .ForMember(src => src.TopicName, opt => opt.MapFrom(x => x.Topic.Name));
+            .ForMember(src => src.TopicName, opt => opt.MapFrom(x => x.Topic.Name))
+            .ForMember(src => src.UserName, opt => opt.MapFrom(x => x.User.UserName));
 
         CreateMap<PostCreateModel, PostEntity>()
             .ForMember(src => src.Image, opt => opt.Ignore())

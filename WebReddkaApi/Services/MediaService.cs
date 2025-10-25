@@ -13,7 +13,7 @@ public class MediaService(IConfiguration configuration) : IMediaService
         var sizes = configuration.GetRequiredSection("ImageSizes").Get<List<int>>();
         var dir = Path.Combine(Directory.GetCurrentDirectory(), configuration["ImagesDir"]!);
 
-        Task[] tasks = sizes
+        Task[] tasks = sizes!
             .AsParallel()
             .Select(size =>
             {
@@ -55,7 +55,7 @@ public class MediaService(IConfiguration configuration) : IMediaService
         string imageName = $"{Path.GetRandomFileName()}.webp";
         var sizes = configuration.GetRequiredSection("ImageSizes").Get<List<int>>();
 
-        Task[] tasks = sizes
+        Task[] tasks = sizes!
             .AsParallel()
             .Select(s => SaveImageAsync(bytes, imageName, s))
             .ToArray();
@@ -128,7 +128,7 @@ public class MediaService(IConfiguration configuration) : IMediaService
                 Size = new Size(size, size),
                 Mode = ResizeMode.Max
             });
-            await image.SaveAsync(path, new WebpEncoder());
         });
+        await image.SaveAsync(path, new WebpEncoder());
     }
 }

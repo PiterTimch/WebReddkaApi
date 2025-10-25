@@ -11,4 +11,6 @@ public class PostItemModel
     public DateTime CreatedAt { get; set; }
     public long TopicId { get; set; }
     public string? TopicName { get; set; }
+    public long UserId { get; set; }
+    public string? UserName { get; set; }
 }

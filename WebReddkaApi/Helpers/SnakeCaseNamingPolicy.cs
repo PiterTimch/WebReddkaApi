@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 
+namespace WebReddkaApi.Helpers;
+
 public class SnakeCaseNamingPolicy : JsonNamingPolicy
 {
     public override string ConvertName(string name)
