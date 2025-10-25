@@ -44,10 +44,16 @@ public static class AppInitializerExtensions
             TemporaryFilesFolder = tempDir
         };
 
-        await FFMpegDownloader.DownloadBinaries(
-            FFMpegVersions.LatestAvailable,
-            options: ffOptions
-        );
+        var ffmpegExe = Path.Combine(ffmpegDir, "ffmpeg.exe");
+        var ffprobeExe = Path.Combine(ffmpegDir, "ffprobe.exe");
+
+        if (!File.Exists(ffmpegExe) || !File.Exists(ffprobeExe))
+        {
+            await FFMpegDownloader.DownloadBinaries(
+                FFMpegVersions.LatestAvailable,
+                options: ffOptions
+            );
+        }
 
         GlobalFFOptions.Configure(opt =>
         {

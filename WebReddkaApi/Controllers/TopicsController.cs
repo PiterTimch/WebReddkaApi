@@ -12,13 +12,25 @@ namespace WebReddkaApi.Controllers;
 public class TopicsController(AppDbContext context, IMapper mapper) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetTopicsAsync()
+    public async Task<IActionResult> GetTopicsAsync([FromQuery] string? parent)
     {
+        long? parentId = null;
+
+        if (!string.IsNullOrEmpty(parent) && parent.ToLower() != "null")
+        {
+            if (!long.TryParse(parent, out var parsedId))
+            {
+                return BadRequest("Invalid parent id");
+            }
+            parentId = parsedId;
+        }
+
         var topics = await context.Topics
-            .Where(t => t.ParentId == null)
+            .Where(t => t.ParentId == parentId)
             .OrderBy(t => t.Priority)
             .ProjectTo<TopicItemModel>(mapper.ConfigurationProvider)
             .ToListAsync();
+
         return Ok(topics);
     }
 }
