@@ -25,17 +25,25 @@ public class PostsController(AppDbContext context, IMapper mapper, IMediaService
     [HttpPost]
     public async Task<IActionResult> CreatePostAsync([FromForm] PostCreateModel model)
     {
-        var postEntity = mapper.Map<PostEntity>(model);
-        if (model.Image != null)
+        try
         {
-            postEntity.Image = await mediaService.SaveImageAsync(model.Image);
+            var postEntity = mapper.Map<PostEntity>(model);
+            if (model.Image != null)
+            {
+                postEntity.Image = await mediaService.SaveImageAsync(model.Image);
+            }
+            if (model.Video != null)
+            {
+                postEntity.Video = await mediaService.SaveVideoAsync(model.Video);
+            }
+            context.Posts.Add(postEntity);
+            await context.SaveChangesAsync();
+            return Ok();
         }
-        if (model.Video != null)
+        catch (Exception ex)
         {
-            
+            return BadRequest(ex.Message);
         }
-        context.Posts.Add(postEntity);
-        await context.SaveChangesAsync();
-        return Ok();
+        
     }
 }

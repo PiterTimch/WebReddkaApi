@@ -1,7 +1,8 @@
-﻿using WebReddkaApi.Interfaces;
+﻿using FFMpegCore;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
+using WebReddkaApi.Interfaces;
 
 namespace WebReddkaApi.Services;
 
@@ -73,6 +74,46 @@ public class MediaService(IConfiguration configuration) : IMediaService
         byte[] imageBytes = Convert.FromBase64String(base64Data);
 
         return await SaveImageAsync(imageBytes);
+    }
+
+    public async Task<string> SaveVideoAsync(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            throw new ArgumentException("Файл не знайдено або порожній");
+
+        //Дозволені формати
+        var allowedExtensions = new[] { ".mp4", ".webm", ".mov" };
+        var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+        if (!allowedExtensions.Contains(extension))
+            throw new InvalidOperationException("Непідтримуваний формат відео");
+
+        //Обмеження розміру (наприклад, до 50 МБ)
+        if (file.Length > 50 * 1024 * 1024)
+            throw new InvalidOperationException("Відео завелике");
+
+        //Тимчасово зберігаємо файл для перевірки
+        var tempPath = Path.GetTempFileName();
+        using (var stream = new FileStream(tempPath, FileMode.Create))
+            await file.CopyToAsync(stream);
+
+        //Перевіряємо тривалість (до 2 хв)
+        var info = await FFProbe.AnalyseAsync(tempPath);
+        if (info.Duration.TotalMinutes > 2)
+        {
+            File.Delete(tempPath);
+            throw new InvalidOperationException("Відео перевищує 2 хвилини");
+        }
+
+        //Генеруємо нове ім’я
+        var videoName = $"{Guid.NewGuid()}{extension}";
+        var saveDir = Path.Combine(Directory.GetCurrentDirectory(), configuration["VideoDir"]!);
+        Directory.CreateDirectory(saveDir);
+
+        var finalPath = Path.Combine(saveDir, videoName);
+        File.Move(tempPath, finalPath);
+
+        return videoName;
     }
 
     private async Task SaveImageAsync(byte[] bytes, string name, int size)
