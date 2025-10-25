@@ -4,13 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebReddkaApi.Data;
 using WebReddkaApi.Data.Entities;
+using WebReddkaApi.Interfaces;
 using WebReddkaApi.Models.Posts;
 
 namespace WebReddkaApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class PostsController(AppDbContext context, IMapper mapper) : ControllerBase
+public class PostsController(AppDbContext context, IMapper mapper, IMediaService mediaService) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetPostsAsync()
@@ -27,7 +28,7 @@ public class PostsController(AppDbContext context, IMapper mapper) : ControllerB
         var postEntity = mapper.Map<PostEntity>(model);
         if (model.Image != null)
         {
-            
+            postEntity.Image = await mediaService.SaveImageAsync(model.Image);
         }
         if (model.Video != null)
         {

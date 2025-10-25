@@ -18,6 +18,7 @@
 		</PackageReference>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
 	</ItemGroup>
 
@@ -25,10 +26,6 @@
 	  <Content Update="Helpers\JsonData\Topics.json">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Controler\" />
 	</ItemGroup>
 
 </Project>
