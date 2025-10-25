@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using WebReddkaApi.Data.Entities;
 
 namespace WebAPIDB.Data.Entities.Identity;
 
@@ -11,4 +12,5 @@ public class UserEntity : IdentityUser<long>
 
     public virtual ICollection<UserRoleEntity>? UserRoles { get; set; }
     public virtual ICollection<UserLoginEntity>? UserLogins { get; set; }
+    public virtual ICollection<PostEntity>? PostEntities { get; set; }
 }
