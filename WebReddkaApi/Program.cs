@@ -43,6 +43,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IMediaService, MediaService>();
+builder.Services.AddScoped<IJWTTokenService, JWTTokenService>();
+builder.Services.AddScoped<ISmtpService, SmtpService>();
 
 var app = builder.Build();
 
