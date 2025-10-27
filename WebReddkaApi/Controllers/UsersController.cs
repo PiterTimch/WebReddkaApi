@@ -23,7 +23,7 @@ public class UsersController(IAccountService accountService) : ControllerBase
     public async Task<IActionResult> Register([FromForm] RegisterModel model)
     {
         var result = await accountService.RegisterAsync(model);
-        if (result != null)
+        if (result == null)
         {
             return BadRequest(new
             {
