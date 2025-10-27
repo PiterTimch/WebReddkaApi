@@ -14,5 +14,8 @@ public class UserMapper : Profile
 
         CreateMap<RegisterModel, UserEntity>()
             .ForMember(x => x.UserName, opt => opt.MapFrom(x => x.Username ?? x.Email));
+
+        CreateMap<GoogleAccountModel, UserEntity>()
+                .ForMember(x => x.UserName, opt => opt.MapFrom(x => x.Email));
     }
 }

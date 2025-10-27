@@ -38,4 +38,24 @@ public class UsersController(IAccountService accountService) : ControllerBase
             refresh = result?["refresh"]
         });
     }
+
+    [HttpPost("google-login")]
+    public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequestModel model)
+    {
+        var result = await accountService.LoginByGoogle(model.Token);
+        if (result == null)
+        {
+            return BadRequest(new
+            {
+                Status = 400,
+                IsValid = false,
+                Errors = new { Email = "Помилка реєстрації" }
+            });
+        }
+        return Ok(new
+        {
+            access = result?["access"],
+            refresh = result?["refresh"]
+        });
+    }
 }
