@@ -10,15 +10,17 @@ namespace WebReddkaApi.Services;
 public class JWTTokenService(IConfiguration configuration,
     UserManager<UserEntity> userManager) : IJWTTokenService
 {
-    public async Task<string> CreateTokenAsync(UserEntity user)
+    public async Task<Dictionary<string, string>> CreateTokenAsync(UserEntity user)
     {
         string key = configuration["JWT:Key"]!;
 
         var claims = new List<Claim>
         {
             new Claim("email", user.Email),
-            new Claim("name", $"{user.FirstName} {user.LastName}"),
-            new Claim("image", user.Image != null? user.Image : "")
+            new Claim("image", user.Image != null? user.Image : ""),
+            new Claim("id", user.Id.ToString()),
+            new Claim("username", user.UserName!),
+            new Claim("date_joined", user.DateCreated.ToString())
         };
 
         foreach (var role in await userManager.GetRolesAsync(user))
@@ -37,8 +39,11 @@ public class JWTTokenService(IConfiguration configuration,
             signingCredentials: signingCredentials
         );
 
-        string token = new JwtSecurityTokenHandler().WriteToken(sec);
+        var result = new Dictionary<string, string>();
 
-        return token;
+        result["access"] = new JwtSecurityTokenHandler().WriteToken(sec);
+        result["refresh"] = new JwtSecurityTokenHandler().WriteToken(sec);
+
+        return result;
     }
 }

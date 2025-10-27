@@ -4,6 +4,6 @@ namespace WebReddkaApi.Interfaces;
 
 public interface IAccountService
 {
-    public Task<string> LoginAsync(LoginModel model);
-    public Task<string> RegisterAsync(RegisterModel model);
+    public Task<Dictionary<string, string>?> LoginAsync(LoginModel model);
+    public Task<Dictionary<string, string>?> RegisterAsync(RegisterModel model);
 }

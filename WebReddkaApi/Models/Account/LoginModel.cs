@@ -3,10 +3,10 @@
 public class LoginModel
 {
     /// <summary>
-    /// Електрона пошта користувача
+    /// Нік користувача
     /// </summary>
-    /// <example>admin@example.com</example>
-    public string Email { get; set; } = string.Empty;
+    /// <example>admin</example>
+    public string Username { get; set; } = string.Empty;
 
     /// <summary>
     /// Пароль користувача

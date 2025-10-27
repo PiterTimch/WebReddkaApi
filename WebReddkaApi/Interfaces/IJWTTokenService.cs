@@ -4,5 +4,5 @@ namespace WebReddkaApi.Interfaces;
 
 public interface IJWTTokenService
 {
-    Task<string> CreateTokenAsync(UserEntity user);
+    Task<Dictionary<string, string>> CreateTokenAsync(UserEntity user);
 }

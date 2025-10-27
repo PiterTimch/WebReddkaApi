@@ -11,18 +11,19 @@ public class UsersController(IAccountService accountService) : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
-        string result = await accountService.LoginAsync(model);
+        var result = await accountService.LoginAsync(model);
         return Ok(new
         {
-            Token = result
+            access = result?["access"],
+            refresh = result?["refresh"]
         });
     }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromForm] RegisterModel model)
     {
-        string result = await accountService.RegisterAsync(model);
-        if (string.IsNullOrEmpty(result))
+        var result = await accountService.RegisterAsync(model);
+        if (result != null)
         {
             return BadRequest(new
             {
@@ -33,7 +34,8 @@ public class UsersController(IAccountService accountService) : ControllerBase
         }
         return Ok(new
         {
-            Token = result
+            access = result?["access"],
+            refresh = result?["refresh"]
         });
     }
 }

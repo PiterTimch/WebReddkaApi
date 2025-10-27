@@ -9,14 +9,13 @@ public class LoginValidator : AbstractValidator<LoginModel>
 {
     public LoginValidator(UserManager<UserEntity> userManager)
     {
-        RuleFor(x => x.Email)
-            .NotEmpty().WithMessage("Електронна пошта є обов'язковою")
-            .EmailAddress().WithMessage("Некоректний формат електронної пошти")
-            .MustAsync(async (email, cancellation) =>
+        RuleFor(x => x.Username)
+            .NotEmpty().WithMessage("Нік є обов'язковим")
+            .MustAsync(async (username, cancellation) =>
             {
-                var user = await userManager.FindByEmailAsync(email);
+                var user = await userManager.FindByNameAsync(username);
                 return user != null;
-            }).WithMessage("Користувача з такою поштою не знайдено");
+            }).WithMessage("Користувача з таким ніком");
 
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage("Пароль є обов'язковим")
@@ -25,10 +24,10 @@ public class LoginValidator : AbstractValidator<LoginModel>
         RuleFor(x => x)
             .MustAsync(async (model, cancellation) =>
             {
-                var user = await userManager.FindByEmailAsync(model.Email);
+                var user = await userManager.FindByNameAsync(model.Username);
                 if (user == null) return false;
                 return await userManager.CheckPasswordAsync(user, model.Password);
             })
-            .WithMessage("Невірний email або пароль");
+            .WithMessage("Невірний логін або пароль");
     }
 }

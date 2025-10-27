@@ -12,19 +12,22 @@ public class AccountService(IJWTTokenService tokenService,
         IMapper mapper,
         IMediaService mediaService) : IAccountService
 {
-    public async Task<string> LoginAsync(LoginModel model)
+    public async Task<Dictionary<string, string>?> LoginAsync(LoginModel model)
     {
-        var user = await userManager.FindByEmailAsync(model.Email);
+        var user = await userManager.FindByNameAsync(model.Username);
+
         if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
         {
-            var token = await tokenService.CreateTokenAsync(user);
+            var tokens = await tokenService.CreateTokenAsync(user);
             await userManager.UpdateAsync(user);
-            return token;
+            return tokens;
         }
-        return string.Empty;
+
+        return null;
     }
 
-    public async Task<string> RegisterAsync(RegisterModel model)
+
+    public async Task<Dictionary<string, string>?> RegisterAsync(RegisterModel model)
     {
         var user = mapper.Map<UserEntity>(model);
         if (model.ImageFile != null)
@@ -39,6 +42,6 @@ public class AccountService(IJWTTokenService tokenService,
             var token = await tokenService.CreateTokenAsync(user);
             return token;
         }
-        return string.Empty;
+        return null;
     }
 }
